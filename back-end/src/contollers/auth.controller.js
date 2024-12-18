@@ -97,5 +97,5 @@ export const logout = (req, res) => {
     return res.status(500).json({message:"internal error"});
 
 
-   }
+   };
 }
