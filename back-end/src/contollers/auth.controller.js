@@ -46,13 +46,45 @@ export const signup = async (req, res) => {
 
     } catch (error) {
         console.log("error in signup controller", error.message);
-        res.status(500).json({message:"Internal sever error"})
+        res.status(500).json({message:"Internal sever error"});
 
     }
 }
 
-export const login = (req, res) => {
-    res.send("login route" )
+export const login =  async(req, res) => {
+  const{email,password} =  req.body
+
+  try {
+    const user = await User.findOne({email});
+    if (!user) {
+        return res.status(400).json({message:"invalid credentials"});
+    }
+
+    const isPasswordCorrect =await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect){
+        return res.status(400).json({message:"invalid credentials"});
+    }
+
+    generateToken(user._id,res)
+    res.status(200).json({
+        _id: newUser._id,
+        fullName: newUser.fullName,
+        email: newUser.email,
+        profilePic: newUser.profilePic,})
+
+  }catch (error) {
+    console.log("error in login controller", error.message);
+    return res.status(500).json({message:"internal error"});
+
+
+  }
+
+
+
+
+
+
+
 }
 
 export const logout = (req, res) => {
